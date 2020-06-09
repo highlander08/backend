@@ -1,14 +1,37 @@
 const express = require('express');
-const {uuid} = require('uuidv4'); 
+const {uuid, isUuid } = require('uuidv4');  // id unico e universal e pssar string para retorna se o id é valido 
 
 const app = express();
 
-app.use(express.json());
-
+app.use(express.json());  // middleware //
 
 const projects = [];
+// mostra metodos e rotas de cada uma das requisição no backend //
+function logrequest(request, response, next){
+//  pegar metodos de dentro de request eual rota esta sendo chamada na aplicação //
+const {method, url} = request;
+// converter os metodos em caixa alta //
+const loglabel = `[${method.toUpperCase()} ${url}]`;
 
-app.get('/projects', (request, response)=>{
+console.log(loglabel);
+
+return next(); // proximo middleware
+}
+// usada para validar se o id é valido
+function validarprojeto(request, response, next){ // 
+  const {id} = request.params;
+// se nao for o id retorna status erro //
+  if(!isUuid(id)){
+    return response.status(400).json({error: 'id invalido'});
+  }
+  return next();
+}
+
+app.use(logrequest);
+//usar o middleware apenas nas rotas que tiver essa url projects //
+app.use('/projects/:id',validarprojeto);
+
+app.get('/projects', /*logrequest*/  (request, response)=>{ //usando o middleware apenas na rota get //
  const {title} = request.query;
 
  // titulo preenchido pelo o usuario a variavel results vai filtrar algo de projects
@@ -20,7 +43,6 @@ const results  = title
 
  return response.json( results );
 });
-
 app.post('/projects', (request, response)=>{
 
   const { title, owner} = request.body;
@@ -31,7 +53,6 @@ app.post('/projects', (request, response)=>{
 
   return response.json(project); // sempre passa o projeto recem criado //
 });
-
 app.put('/projects/:id', (request, response)=>{
 
   const {id} = request.params;
@@ -58,7 +79,6 @@ if(projectIndex < 0){
   return response.json( project); // retorno do projeto atualizado//
 });
 
-
 app.delete('/projects/:id', (request, response)=>{
 const {id} = request.params;
 // encontrar o indice do projeto dentro do array //
@@ -74,10 +94,6 @@ projects.splice(projectIndex, 1)
 // quando é o metodo delete deixa envia apenas um estatus de sucess //
   return response.status(204).send(); 
 });
-
-
-
-
 app.listen(3333, ()=> {
   console.log('🐱‍❤ backend started')
 });
