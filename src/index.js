@@ -22,7 +22,7 @@ const loglabel = `[${method.toUpperCase()} ${url}]`;
 
 console.log(loglabel);
 
-return next(); // proximo middleware
+return next(); // proximo middleware //
 }
 // usada para validar se o id é valido
 function validarprojeto(request, response, next){ // 
