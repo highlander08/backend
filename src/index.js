@@ -29,7 +29,7 @@ function validarprojeto(request, response, next){ //
   const {id} = request.params;
 // se nao for o id retorna status erro //
   if(!isUuid(id)){
-    return response.status(400).json({error: 'id do projeto invalido'});
+    return response.status(400).json({error: 'id do projeto invalido poxa'});
   }
   return next();
 }
