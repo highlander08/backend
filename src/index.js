@@ -1,9 +1,16 @@
+// microframwork para rotas //
 const express = require('express');
-const {uuid, isUuid } = require('uuidv4');  // id unico e universal e pssar string para retorna se o id é valido 
+// id unico e universal e pssar string para retorna se o id é valido 
+const {uuid, isUuid } = require('uuidv4');  
+// conectar o backend com o frontend // 
+const cors = require('cors');
 
 const app = express();
 
-app.use(express.json());  // middleware //
+// permitir qualquer url ou frontend tenha acesso ao nosso backend
+app.use(cors());
+// ler as requisiçoes em json
+app.use(express.json()); 
 
 const projects = [];
 // mostra metodos e rotas de cada uma das requisição no backend //
